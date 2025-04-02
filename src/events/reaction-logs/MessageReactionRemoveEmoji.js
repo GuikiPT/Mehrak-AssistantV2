@@ -85,9 +85,14 @@ module.exports = {
                         return originalEmbed;
                     });
                     
-                    await logMessage.reply({ 
+                    const thread = await logMessage.startThread({
+                        name: `Reaction RemoveEmoji`,
+                        autoArchiveDuration: 60
+                    });
+                    
+                    await thread.send({
                         content: `## **Original embeds from the message:**`,
-                        embeds: rebuiltEmbeds 
+                        embeds: rebuiltEmbeds
                     });
                 } catch (embedError) {
                     console.error(colors.red('Error sending original embeds:', embedError));
