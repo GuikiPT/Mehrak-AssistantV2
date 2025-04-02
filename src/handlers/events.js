@@ -9,7 +9,17 @@ module.exports = async function (client) {
     const eventsPath = path.join(__dirname, '../events');
     const eventFolders = fs.readdirSync(eventsPath);
 
+    /**
+     * @param {Object} event
+     * @param {string} eventName
+     * @param {string} filePath
+     * @param {boolean} [once=false]
+     */
     const bindEvent = (event, eventName, filePath, once = false) => {
+        /**
+         * @param {...any} args
+         * @returns {Promise<void>}
+         */
         const eventHandler = async (...args) => {
             try {
                 await event.execute(...args);
@@ -26,11 +36,14 @@ module.exports = async function (client) {
     };
 
     for (const folder of eventFolders) {
+        /** @type {string[]} */
         const eventFiles = fs.readdirSync(path.join(eventsPath, folder)).filter(file => file.endsWith('.js'));
 
         for (const file of eventFiles) {
+            /** @type {string} */
             const filePath = path.join(eventsPath, folder, file);
             try {
+                /** @type {Object} */
                 const event = require(filePath);
 
                 if (!event.name || !event.execute) {

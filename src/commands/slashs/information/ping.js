@@ -2,7 +2,6 @@ const { SlashCommandBuilder, MessageFlags, EmbedBuilder } = require('discord.js'
 const colors = require('colors/safe');
 
 /**
- * Standard error message shown to users when a command fails
  * @type {string}
  */
 const COMMAND_ERROR_MESSAGE = '❌ An error occurred while executing this command.';
@@ -14,15 +13,13 @@ module.exports = {
 		.addBooleanOption(option =>
 			option.setName('private')
 				.setDescription('Whether the response should be private (ephemeral)')
-			),
+					),
 	/**
-	 * Executes the ping command to display bot and API latency
-	 * @param {import('discord.js').CommandInteraction} interaction - The interaction object
+	 * @param {import('discord.js').CommandInteraction} interaction
 	 * @returns {Promise<void>}
 	 */
 	async execute(interaction) {
 		/**
-		 * Whether the response should be private (ephemeral)
 		 * @type {boolean}
 		 */
 		const isPrivate = interaction.options.getBoolean('private') || false;
@@ -33,27 +30,23 @@ module.exports = {
 			});
 
 			/**
-			 * The reply message sent by the bot
 			 * @type {import('discord.js').Message}
 			 */
 			const sent = await interaction.fetchReply();			
 			
 			/**
-			 * Bot response time in milliseconds
 			 * @type {number}
 			 */
 			const botLatency = sent.createdTimestamp - interaction.createdTimestamp;
 			
 			/**
-			 * Discord API websocket ping in milliseconds
 			 * @type {number}
 			 */
 			const apiLatency = Math.round(interaction.client.ws.ping);
 
 			/**
-			 * Formats the ping value with color-coded code blocks
-			 * @param {number} ms - Latency in milliseconds
-			 * @returns {string} - Formatted code block with appropriate color
+			 * @param {number} ms
+			 * @returns {string}
 			 */
 			const formatPing = (ms) => {
 				if (ms < 100) return "```diff\n+ ${ms}ms\n```".replace("${ms}", ms);
@@ -62,18 +55,16 @@ module.exports = {
 			};
 			
 			/**
-			 * Determines the embed color based on latency values
-			 * @returns {number} - Hexadecimal color code
+			 * @returns {number}
 			 */
 			const getEmbedColor = () => {
 				const highestLatency = Math.max(botLatency, apiLatency);
-				if (highestLatency < 100) return 0x2ECC71; // Green for good ping
-				if (highestLatency < 200) return 0xF1C40F; // Yellow for acceptable ping
-				return 0xE74C3C; // Red for poor ping
+				if (highestLatency < 100) return 0x2ECC71; // Green
+				if (highestLatency < 200) return 0xF1C40F; // Yellow
+				return 0xE74C3C; // Red
 			};
 
 			/**
-			 * Embed containing ping information
 			 * @type {import('discord.js').EmbedBuilder}
 			 */
 			const pingEmbed = new EmbedBuilder()
@@ -101,18 +92,13 @@ module.exports = {
 };
 
 /**
- * Handles command execution errors and sends appropriate responses
- * @param {import('discord.js').CommandInteraction} interaction - The interaction object
- * @param {string} action - Description of the action that failed
- * @param {Error} error - The error that occurred
- * @param {boolean} isPrivate - Whether the error response should be private
+ * @param {import('discord.js').CommandInteraction} interaction
+ * @param {string} action
+ * @param {Error} error
+ * @param {boolean} isPrivate
  * @returns {Promise<void>}
  */
 async function handleCommandError(interaction, action, error, isPrivate) {
-	/**
-	 * User-friendly error message
-	 * @type {string}
-	 */
 	const errorMessage = `${COMMAND_ERROR_MESSAGE} while ${action}. Please try again later.`;
 
 	try {

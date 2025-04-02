@@ -6,6 +6,10 @@ const COMMAND_ERROR_MESSAGE = 'There was an error while executing this command!'
 module.exports = {
     name: Discord.Events.InteractionCreate,
     once: false,
+    /**
+     * @param {Discord.Interaction} interaction
+     * @returns {Promise<void>}
+     */
     async execute(interaction) {
         if (interaction.isChatInputCommand() || interaction.isAutocomplete()) {
             const command = getCommand(interaction);
@@ -25,6 +29,10 @@ module.exports = {
     },
 };
 
+/**
+ * @param {Discord.Interaction} interaction
+ * @returns {Object|undefined}
+ */
 function getCommand(interaction) {
     const command = interaction.client.slashsCmds.get(interaction.commandName);
     if (!command) {
@@ -35,6 +43,11 @@ function getCommand(interaction) {
     return command;
 }
 
+/**
+ * @param {Object} command
+ * @param {Discord.CommandInteraction} interaction
+ * @returns {Promise<void>}
+ */
 async function executeCommand(command, interaction) {
     try {
         await command.execute(interaction);
@@ -43,6 +56,11 @@ async function executeCommand(command, interaction) {
     }
 }
 
+/**
+ * @param {Object} command
+ * @param {Discord.AutocompleteInteraction} interaction
+ * @returns {Promise<void>}
+ */
 async function executeAutocomplete(command, interaction) {
     try {
         await command.autocomplete(interaction);
@@ -51,6 +69,11 @@ async function executeAutocomplete(command, interaction) {
     }
 }
 
+/**
+ * @param {Discord.Interaction} interaction
+ * @param {string} errorMessage
+ * @returns {Promise<void>}
+ */
 async function handleInteractionError(interaction, errorMessage) {
     try {
         if (interaction.replied || interaction.deferred) {
