@@ -1,6 +1,8 @@
 # Custom
 *.db
+*.db*
 *.sqlite
+scan-reports/
 
 # Logs
 logs
