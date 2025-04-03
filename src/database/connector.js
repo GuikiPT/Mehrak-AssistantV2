@@ -10,7 +10,7 @@ const colors = require('colors/safe');
  */
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: path.join(__dirname, 'database.sqlite'),
+    storage: path.join(__dirname, 'database.db'),
     logging: false,
 });
 
