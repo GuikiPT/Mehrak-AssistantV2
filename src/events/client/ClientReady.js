@@ -14,7 +14,7 @@ module.exports = {
 		/** @type {string} */
 		const activity = process.env.DiscordBotActivity || 'Default Activity';
 		/** @type {Discord.ActivityType} */
-		const activityType = process.env.DiscordBotActivityType || Discord.ActivityType.Playing;
+		const activityType = Discord.ActivityType.Watching;
 		/** @type {string} */
 		const status = process.env.DiscordBotStatus || 'online';
 
@@ -35,7 +35,7 @@ module.exports = {
 
 		try {
 			await client.user.setPresence({
-				activities: [{ name: activity, type: activityType }],
+				activities: [{ name: activity }],
 				status: status,
 			});
 			console.log(colors.blue('Presence set successfully.'))

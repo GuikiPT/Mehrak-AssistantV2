@@ -6,13 +6,19 @@ const { sequelize } = require('../connector');
 
 /**
  * @typedef {Object} ServerConfig
+ * @property {number} id
  * @property {string} guild_id
  * @property {string|null} reaction_log_channels_id
  */
 const ServerConfig = sequelize.define('ServerConfig', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
+    },
     guild_id: {
         type: DataTypes.STRING,
-        primaryKey: true,
         allowNull: false,
         unique: true
     },
