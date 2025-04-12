@@ -50,7 +50,7 @@ module.exports = async function (client) {
                 }
             } catch (error) {
                 console.error(colors.red(`Failed to load slash command from file: '${filePath}'`));
-                console.error(colors.red(error.stack || error.message));
+                console.error(colors.red(error.stack || error.stack));
             }
         }
     }

@@ -24,7 +24,7 @@ module.exports = async function (client) {
             try {
                 await event.execute(...args);
             } catch (error) {
-                console.error(colors.red(`Error executing event '${eventName}' in file '${filePath}': ${error.message}`));
+                console.error(colors.red(`Error executing event '${eventName}' in file '${filePath}': ${error.stack}`));
             }
         };
 

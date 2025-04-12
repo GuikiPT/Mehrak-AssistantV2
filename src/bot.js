@@ -48,7 +48,7 @@ async function startBot() {
 
             await startBotInstance();
         } catch (error) {
-            logError(`Initialization error: ${error.message}`);
+            logError(`Initialization error: ${error.stack}`);
             process.exit(1);
         }
     }
@@ -91,7 +91,7 @@ async function startBot() {
             await client.destroy();
             process.exit();
         } catch (error) {
-            logError(`Error during shutdown: ${error.message}`);
+            logError(`Error during shutdown: ${error.stack}`);
             process.exit(1);
         }
     }

@@ -40,7 +40,7 @@ module.exports = {
 			});
 			console.log(colors.blue('Presence set successfully.'))
 		} catch (error) {
-			console.error(colors.red(`Error setting presence: ${error.message}`))
+			console.error(colors.red(`Error setting presence: ${error.stack}`))
 		}
 
 		validateEnvVariables();

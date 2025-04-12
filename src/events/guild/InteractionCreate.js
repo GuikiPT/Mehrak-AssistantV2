@@ -52,7 +52,7 @@ async function executeCommand(command, interaction) {
     try {
         await command.execute(interaction);
     } catch (error) {
-        throw new Error(`Execution error in command ${interaction.commandName}: ${error.message}`);
+        throw new Error(`Execution error in command ${interaction.commandName}: ${error.stack}`);
     }
 }
 
@@ -65,7 +65,7 @@ async function executeAutocomplete(command, interaction) {
     try {
         await command.autocomplete(interaction);
     } catch (error) {
-        throw new Error(`Execution error in autocomplete for ${interaction.commandName}: ${error.message}`);
+        throw new Error(`Execution error in autocomplete for ${interaction.commandName}: ${error.stack}`);
     }
 }
 

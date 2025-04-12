@@ -24,7 +24,7 @@ const loadModels = () => {
             require(path.join(modelsPath, file));
             console.log(colors.green(`Loaded model: ${file}`));
         } catch (error) {
-            console.error(colors.red(`Error loading model ${file}: ${error.message}`));
+            console.error(colors.red(`Error loading model ${file}: ${error.stack}`));
         }
     }
 };
@@ -64,6 +64,6 @@ module.exports = async (client) => {
         
         console.log(colors.green('Database handler initialized successfully.'));
     } catch (error) {
-        console.error(colors.red(`Database initialization error: ${error.message}`));
+        console.error(colors.red(`Database initialization error: ${error.stack}`));
     }
 };

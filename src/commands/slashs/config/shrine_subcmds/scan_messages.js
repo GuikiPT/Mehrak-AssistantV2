@@ -71,7 +71,7 @@ async function execute(interaction, guildId) {
                 resultsEmbed.setThumbnail(sticker.url);
             }
         } catch (error) {
-            console.error(colors.red(`Error fetching sticker for scan results: ${error.message}`));
+            console.error(colors.red(`Error fetching sticker for scan results: ${error.stack}`));
         }
         
         // Generate detailed report
@@ -169,7 +169,7 @@ async function processAllMessages(channel, config, eventId, interaction, roleRet
             results.errorLog.push({
                 timestamp: new Date().toISOString(),
                 type: 'FetchError',
-                message: error.message,
+                message: error.stack,
                 code: error.code
             });
             
@@ -309,7 +309,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                                     member = await message.guild.members.fetch(message.author.id);
                                 } catch (fetchError) {
                                     // Handle unknown member error
-                                    if (fetchError.code === 10007 || fetchError.message.includes('Unknown Member')) {
+                                    if (fetchError.code === 10007 || fetcherror.stack.includes('Unknown Member')) {
                                         const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
                                         const errorMsg = `[${timestamp}] [error] >> Error assigning role to ${message.author.username}: Unknown Member`;
                                         console.error(colors.yellow(errorMsg));
@@ -361,7 +361,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                                 await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
                             } else {
                                 const timestamp = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                                const errorMsg = `[${timestamp}] [error] >> Error assigning role to ${message.author.username}: ${roleError.message}`;
+                                const errorMsg = `[${timestamp}] [error] >> Error assigning role to ${message.author.username}: ${roleerror.stack}`;
                                 console.error(colors.red(errorMsg));
                                 
                                 results.errorLog.push({
@@ -369,7 +369,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                                     type: 'RoleAssignmentError',
                                     username: message.author.username,
                                     userId: message.author.id,
-                                    message: roleError.message
+                                    message: roleerror.stack
                                 });
                                 
                                 results.errors++;
@@ -406,7 +406,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                                 processedUsers.add(message.author.id);
                                 continue;
                             } catch (retryError) {
-                                console.error(colors.red(`Retry with cleaned data failed: ${retryError.message}`));
+                                console.error(colors.red(`Retry with cleaned data failed: ${retryerror.stack}`));
                             }
                         }
                     } else if (dbError.name === 'SequelizeUniqueConstraintError') {
@@ -415,7 +415,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                         results.alreadyProcessed++;
                         continue;
                     } else {
-                        console.error(colors.red(`Database error processing message ${message.id}: ${dbError.message}`));
+                        console.error(colors.red(`Database error processing message ${message.id}: ${dberror.stack}`));
                     }
                     
                     results.errorLog.push({
@@ -423,7 +423,7 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                         type: 'DatabaseError',
                         username: message.author.username,
                         userId: message.author.id,
-                        message: dbError.message,
+                        message: dberror.stack,
                         details: dbError.errors ? dbError.errors.map(e => `${e.path}: ${e.message}`).join(', ') : ''
                     });
                     
@@ -440,10 +440,10 @@ async function processMessageBatch(messages, config, eventId, processedUsers, re
                 username: message.author?.username || 'unknown',
                 guildId: message.guild?.id || 'unknown',
                 errorName: error.name,
-                errorMessage: error.message
+                errorMessage: error.stack
             };
             
-            console.error(colors.red(`Error processing message ${message.id}: ${error.message}`));
+            console.error(colors.red(`Error processing message ${message.id}: ${error.stack}`));
             console.error(colors.yellow(`Error context: ${JSON.stringify(errorDetails)}`));
             
             results.errorLog.push({
@@ -498,7 +498,7 @@ async function processRoleRetryQueue(retryQueue, config, eventId, results) {
                 await new Promise(resolve => setTimeout(resolve, ROLE_ASSIGN_DELAY_MS));
             } catch (retryError) {
                 attempts++;
-                console.error(colors.red(`Retry attempt ${attempts} failed for ${message.author.username}: ${retryError.message}`));
+                console.error(colors.red(`Retry attempt ${attempts} failed for ${message.author.username}: ${retryerror.stack}`));
                 if (attempts < MAX_RETRY_ATTEMPTS) {
                     retryQueue.push({ message, attempts });
                 } else {
@@ -507,7 +507,7 @@ async function processRoleRetryQueue(retryQueue, config, eventId, results) {
                         type: 'RoleAssignmentError',
                         username: message.author.username,
                         userId: message.author.id,
-                        message: `Failed after ${attempts} attempts: ${retryError.message}`
+                        message: `Failed after ${attempts} attempts: ${retryerror.stack}`
                     });
                     results.errors++;
                 }
@@ -630,7 +630,7 @@ async function generateScanReport(results) {
                 reportContent += `### ${error.timestamp}\n`;
                 reportContent += `- **Type**: ${error.type}\n`;
                 if (error.username) reportContent += `- **User**: ${error.username} (${error.userId})\n`;
-                reportContent += `- **Message**: ${error.message}\n\n`;
+                reportContent += `- **Message**: ${error.stack}\n\n`;
             }
         } else {
             reportContent += `- No errors logged.\n`;
@@ -651,7 +651,7 @@ async function generateScanReport(results) {
         return reportPath;
         
     } catch (error) {
-        console.error(colors.red(`Error generating report: ${error.message}`));
+        console.error(colors.red(`Error generating report: ${error.stack}`));
         const fallbackPath = path.join(process.cwd(), `scan-report-${timestamp}.md`);
         const simpleReport = `# Scan Report\n\nMessages: ${results.messagesScanned}\nStickers: ${results.matchingStickers}\nRoles: ${results.rolesAssigned}\nErrors: ${results.errors}`;
         await fs.writeFile(fallbackPath, simpleReport);
