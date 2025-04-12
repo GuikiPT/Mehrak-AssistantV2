@@ -77,9 +77,9 @@ async function executeAutocomplete(command, interaction) {
 async function handleInteractionError(interaction, errorMessage) {
     try {
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: errorMessage, ephemeral: Discord.MessageFlags.EPHEMERAL });
+            await interaction.followUp({ content: errorMessage, flags: Discord.MessageFlags.EPHEMERAL });
         } else {
-            await interaction.reply({ content: errorMessage, ephemeral: Discord.MessageFlags.EPHEMERAL });
+            await interaction.reply({ content: errorMessage, flags: Discord.MessageFlags.EPHEMERAL });
         }
     } catch (error) {
         console.error(colors.red(`Error sending interaction error message: ${error.stack || error}`))

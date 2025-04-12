@@ -86,7 +86,7 @@ module.exports = {
 
             return await interaction.reply({
                 embeds: [embed],
-                ephemeral: Discord.MessageFlags.Ephemeral,
+                flags: Discord.MessageFlags.Ephemeral,
             });
 
             // switch(subcommand) {
